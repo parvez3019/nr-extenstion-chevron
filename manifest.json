@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "New Relic Chevron Colors Visibility",
+  "version": "1.0",
+  "host_permissions": [
+    "https://*.newrelic.com/*"
+  ],
+  "icons": {
+    "128": "nr-logo.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "webRequest"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.newrelic.com/*"
+      ],
+      "js": [
+        "inject.js"
+      ]
+    }
+  ]
+}
