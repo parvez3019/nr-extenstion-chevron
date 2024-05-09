@@ -8,11 +8,6 @@
   "icons": {
     "128": "nr-logo.png"
   },
-  "permissions": [
-    "storage",
-    "activeTab",
-    "webRequest"
-  ],
   "content_scripts": [
     {
       "matches": [
