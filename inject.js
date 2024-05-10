@@ -3,19 +3,18 @@ const reverseBehaviourMap ={'Ad Posting Failure':true, 'Posting Fail % (GNL)': t
 setInterval(changeColor, 250);
 
 function changeColor() {
-    const classNames = ["AKCAAY", "AJCAAY"];
-    for (var i = 0; i < classNames.length; i++) {
-      const downArrowsDiv = this.document.getElementsByClassName(classNames[i]+ "--vz--viz-billboard-element__inner");
-      if (downArrowsDiv.length > 0) {
-         for (var looper = 0; looper < downArrowsDiv.length; looper++) {
-          const divText = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-name ok");
-          const downArrows = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-relative "+classNames[i]+ "--vz--viz-billboard-relative--no-color "+classNames[i]+ "--vz--viz-billboard-relative--decrease");
-          const upArrows = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-relative "+classNames[i]+ "--vz--viz-billboard-relative--no-color "+classNames[i]+ "--vz--viz-billboard-relative--increase");
-          changeDownArrowColor(downArrows, divText);
-          changeUpArrowColor(upArrows, divText);
+    const downArrowsDiv = document.querySelectorAll('[class$="--vz--viz-billboard-element__inner"]');
+    downArrowsDiv.forEach(downArrowsDiv => {
+        if (downArrowsDiv.length > 0) {
+             for (var looper = 0; looper < downArrowsDiv.length; looper++) {
+              const divText = downArrowsDiv[looper].querySelectorAll('[class$="--vz--viz-billboard-name ok"]');
+              const downArrows = downArrowsDiv[looper].querySelectorAll('[class$="--vz--viz-billboard-relative--decrease"]');
+              const upArrows = downArrowsDiv[looper].querySelectorAll('[class$="--vz--viz-billboard-relative--increase"]');
+              changeDownArrowColor(downArrows, divText);
+              changeUpArrowColor(upArrows, divText);
+            }
         }
-      }
-    }
+    });
 }
 
 function changeDownArrowColor(downArrows, divText) {
