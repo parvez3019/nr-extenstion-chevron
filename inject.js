@@ -3,45 +3,21 @@ const reverseBehaviourMap ={'Ad Posting Failure':true, 'Posting Fail % (GNL)': t
 setInterval(changeColor, 250);
 
 function changeColor() {
-    const classNames = [
-     "AACAAY",
-     "ABCAAY",
-     "ACCAAY",
-     "ADCAAY",
-     "AECAAY",
-     "AFCAAY",
-     "AGCAAY",
-     "AHCAAY",
-     "AICAAY",
-     "AJCAAY", 
-     "AKCAAY",
-     "ALCAAY",
-     "AMCAAY",
-     "ANCAAY",
-     "AOCAAY",
-     "APCAAY",
-     "AQCAAY",
-     "ARCAAY",
-     "ASCAAY",
-     "ATCAAY",
-     "AUCAAY",
-     "AVCAAY",
-     "AWCAAY",
-     "AXCAAY",
-     "AYCAAY",
-     "AZCAAY",
-    ];
-    for (var i = 0; i < classNames.length; i++) {
-      const downArrowsDiv = this.document.getElementsByClassName(classNames[i]+ "--vz--viz-billboard-element__inner");
-      if (downArrowsDiv.length > 0) {
-         for (var looper = 0; looper < downArrowsDiv.length; looper++) {
-          const divText = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-name ok");
-          const downArrows = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-relative "+classNames[i]+ "--vz--viz-billboard-relative--no-color "+classNames[i]+ "--vz--viz-billboard-relative--decrease");
-          const upArrows = downArrowsDiv[looper].getElementsByClassName(classNames[i]+ "--vz--viz-billboard-relative "+classNames[i]+ "--vz--viz-billboard-relative--no-color "+classNames[i]+ "--vz--viz-billboard-relative--increase");
-          changeDownArrowColor(downArrows, divText);
-          changeUpArrowColor(upArrows, divText);
+    var elements = document.querySelectorAll('*');
+    for (var i = 0; i < elements.length; i++) {
+        var classList = elements[i].classList;
+        for (var j = 0; j < classList.length; j++) {
+            var className = classList[j];
+            if (className.endsWith("--vz--viz-billboard-element__inner")) {
+                const suffixIndex = className.lastIndexOf("--vz--viz-billboard-element__inner")
+                var prefix = className.substring(0, suffixIndex);
+                const downArrowsDiv = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-name ok");
+                const downArrows = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-relative " + prefix + "--vz--viz-billboard-relative--no-color " + prefix + "--vz--viz-billboard-relative--decrease");
+                const upArrows = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-relative " + prefix + "--vz--viz-billboard-relative--no-color " + prefix + "--vz--viz-billboard-relative--increase");
+                changeDownArrowColor(downArrows, downArrowsDiv);
+                changeUpArrowColor(upArrows, downArrowsDiv);
+            }
         }
-      }
     }
 }
 
