@@ -3,7 +3,34 @@ const reverseBehaviourMap ={'Ad Posting Failure':true, 'Posting Fail % (GNL)': t
 setInterval(changeColor, 250);
 
 function changeColor() {
-    const classNames = ["AKCAAY", "AJCAAY", "ALCAAY"];
+    const classNames = [
+     "AACAAY",
+     "ABCAAY",
+     "ACCAAY",
+     "ADCAAY",
+     "AECAAY",
+     "AFCAAY",
+     "AGCAAY",
+     "AHCAAY",
+     "AICAAY",
+     "AJCAAY", 
+     "AKCAAY",
+     "ALCAAY",
+     "AMCAAY",
+     "ANCAAY",
+     "AOCAAY",
+     "APCAAY",
+     "AQCAAY",
+     "ARCAAY",
+     "ASCAAY",
+     "ATCAAY",
+     "AUCAAY",
+     "AVCAAY",
+     "AWCAAY",
+     "AXCAAY",
+     "AYCAAY",
+     "AZCAAY",
+    ];
     for (var i = 0; i < classNames.length; i++) {
       const downArrowsDiv = this.document.getElementsByClassName(classNames[i]+ "--vz--viz-billboard-element__inner");
       if (downArrowsDiv.length > 0) {
