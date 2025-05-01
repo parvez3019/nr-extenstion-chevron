@@ -26,12 +26,12 @@ function changeElementsColor(elements, forAll) {
         var classList = elements[i].classList;
         for (var j = 0; j < classList.length; j++) {
             var className = classList[j];
-            if (className.endsWith("--vz--viz-billboard-element__inner")) {
-                const suffixIndex = className.lastIndexOf("--vz--viz-billboard-element__inner")
+            if (className.endsWith("-vz--viz-billboard-element__inner")) {
+                const suffixIndex = className.lastIndexOf("-vz--viz-billboard-element__inner")
                 var prefix = className.substring(0, suffixIndex);
-                const downArrowsDiv = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-name ok");
-                const downArrows = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-relative " + prefix + "--vz--viz-billboard-relative--no-color " + prefix + "--vz--viz-billboard-relative--decrease");
-                const upArrows = elements[i].getElementsByClassName(prefix + "--vz--viz-billboard-relative " + prefix + "--vz--viz-billboard-relative--no-color " + prefix + "--vz--viz-billboard-relative--increase");
+                const downArrowsDiv = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-name ok");
+                const downArrows = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-relative " + prefix + "-vz--viz-billboard-relative--no-color " + prefix + "-vz--viz-billboard-relative--decrease");
+                const upArrows = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-relative " + prefix + "-vz--viz-billboard-relative--no-color " + prefix + "-vz--viz-billboard-relative--increase");
                 changeDownArrowColor(downArrows, downArrowsDiv, forAll);
                 changeUpArrowColor(upArrows, downArrowsDiv, forAll);
             }
