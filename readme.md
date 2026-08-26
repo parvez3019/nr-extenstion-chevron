@@ -22,6 +22,8 @@ If the widget title includes **`REV-XXX`**, or matches a title in `reverseBehavi
 - Upward trend → red  
 - No trend arrow → green  
 
+This applies to single billboards and **group widgets**: if the card title has `REV-XXX`, every row inside is reversed even when row labels do not include that text.
+
 ## Project files
 
 | File | Purpose |

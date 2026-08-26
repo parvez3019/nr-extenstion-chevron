@@ -21,10 +21,11 @@ function changeColor() {
 }
 
 function updateBillboardWidget(element) {
-  const title = getWidgetTitle(element);
   const trend = getTrendDirection(element);
   const dropPercent = getTrendPercent(element);
-  const reverse = shouldReverseColors(title);
+  // Group rows use their own label (e.g. service name); REV-XXX is often on the card header
+  const reverse = shouldReverseColors(getElementLabel(element))
+    || shouldReverseColors(getParentWidgetTitle(element));
 
   element.style.backgroundColor = pickBackgroundColor(trend, dropPercent, reverse);
 }
@@ -50,14 +51,18 @@ function pickBackgroundColor(trend, dropPercent, reverse) {
   return GREEN;
 }
 
-function getWidgetTitle(element) {
+function getElementLabel(element) {
   const label = element.querySelector(
     '.-vz--viz-billboard-new-element-label, [data-test-id="viz.billboard-label"]'
   );
-  const labelText = label ? label.textContent.trim() : '';
-  if (labelText) return labelText;
+  return label ? label.textContent.trim() : '';
+}
 
-  const header = element.closest('.Widget')?.querySelector('.WidgetHeader-title');
+function getParentWidgetTitle(element) {
+  const widget = element.closest('.Widget');
+  if (!widget) return '';
+
+  const header = widget.querySelector(':scope > .WidgetHeader .WidgetHeader-title');
   return header ? header.textContent.trim() : '';
 }
 
