@@ -1,84 +1,87 @@
-const reverseBehaviourMap ={'Ad Posting Failure':true, 'Posting Fail % (GNL)': true};
+const reverseBehaviourMap = {
+  'Ad Posting Failure': true,
+  'Posting Fail % (GNL)': true
+};
+
+// New Relic decrease (↘) icon path fragment
+const DECREASE_PATH_MARKER = 'L12 11.293';
+
+const DROP_WARNING_MAX_PERCENT = 15;
+
+const RED = '#DB543B';
+const YELLOW = '#E6B800';
+const GREEN = '#3BDB47';
 
 setInterval(changeColor, 250);
 
 function changeColor() {
-    var elements = document.querySelectorAll('*');
-    changeElementsColor(elements, false);
-    changeWidgetColor();
+  document
+    .querySelectorAll('.-vz--viz-billboard-new-element')
+    .forEach(updateBillboardWidget);
 }
 
-function changeWidgetColor() {
-    var headers = document.querySelectorAll('.WidgetHeader-title');
-    headers.forEach(header => {
-        if (header && header.textContent && header.textContent.includes("REV-XXX")) {            
-            // Find the closest widget container (assuming it's the parent div)
-            let widget = header.closest('.Widget');
-            if (widget) {
-                changeChildColors(widget);
-            }
-        }
-    });
+function updateBillboardWidget(element) {
+  const title = getWidgetTitle(element);
+  const trend = getTrendDirection(element);
+  const dropPercent = getTrendPercent(element);
+  const reverse = shouldReverseColors(title);
+
+  element.style.backgroundColor = pickBackgroundColor(trend, dropPercent, reverse);
 }
 
-function changeElementsColor(elements, forAll) {
-     for (var i = 0; i < elements.length; i++) {
-        var classList = elements[i].classList;
-        for (var j = 0; j < classList.length; j++) {
-            var className = classList[j];
-            if (className.endsWith("-vz--viz-billboard-element__inner")) {
-                const suffixIndex = className.lastIndexOf("-vz--viz-billboard-element__inner")
-                var prefix = className.substring(0, suffixIndex);
-                const downArrowsDiv = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-name ok");
-                const downArrows = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-relative " + prefix + "-vz--viz-billboard-relative--no-color " + prefix + "-vz--viz-billboard-relative--decrease");
-                const upArrows = elements[i].getElementsByClassName(prefix + "-vz--viz-billboard-relative " + prefix + "-vz--viz-billboard-relative--no-color " + prefix + "-vz--viz-billboard-relative--increase");
-                changeDownArrowColor(downArrows, downArrowsDiv, forAll);
-                changeUpArrowColor(upArrows, downArrowsDiv, forAll);
-            }
-        }
-    }
+/**
+ * Default:
+ *   down > 15%  → red
+ *   down 0–15%  → yellow
+ *   up / none   → green
+ * REV-XXX / map: flip red ↔ green; yellow stays (small change warning).
+ */
+function pickBackgroundColor(trend, dropPercent, reverse) {
+  if (trend === 'down') {
+    const severe = dropPercent > DROP_WARNING_MAX_PERCENT;
+    if (severe) return reverse ? GREEN : RED;
+    return YELLOW;
+  }
+
+  if (trend === 'up') {
+    return reverse ? RED : GREEN;
+  }
+
+  return GREEN;
 }
 
-function changeChildColors(widget) {
-    var children = widget.querySelectorAll('*'); // Get all child elements
-    changeElementsColor(children, true);
+function getWidgetTitle(element) {
+  const label = element.querySelector(
+    '.-vz--viz-billboard-new-element-label, [data-test-id="viz.billboard-label"]'
+  );
+  const labelText = label ? label.textContent.trim() : '';
+  if (labelText) return labelText;
+
+  const header = element.closest('.Widget')?.querySelector('.WidgetHeader-title');
+  return header ? header.textContent.trim() : '';
 }
 
-
-function changeDownArrowColor(downArrows, divText, forAll) {
-    if (isItWorthTraversing(downArrows)) {
-        if (isItHavingAReverseColorPattern(divText[0], forAll)) {
-            setGreenColor(downArrows[0]);
-        } else {
-            setRedColor(downArrows[0]);
-        }
-    }
+function getTrendDirection(element) {
+  const path = element.querySelector(
+    '.-vz--viz-billboard-new-element-trend svg path'
+  );
+  if (!path) return null;
+  const d = path.getAttribute('d') || '';
+  if (d.includes(DECREASE_PATH_MARKER)) return 'down';
+  return 'up';
 }
 
-function changeUpArrowColor(upArrows, divText, forAll) {
-    if (isItWorthTraversing(upArrows)) {
-        if (isItHavingAReverseColorPattern(divText[0], forAll)) {
-           setRedColor(upArrows[0]);
-        } else {
-           setGreenColor(upArrows[0]);
-        }
-    }
+function getTrendPercent(element) {
+  const valueEl = element.querySelector(
+    '.-vz--viz-billboard-new-element-trend-value'
+  );
+  if (!valueEl) return 0;
+  const match = valueEl.textContent.replace(/,/g, '').match(/[\d.]+/);
+  return match ? parseFloat(match[0]) : 0;
 }
 
-function isItWorthTraversing(arrows) {
-    return arrows != undefined && arrows.length >= 1;
-}
-
-function isItHavingAReverseColorPattern(element, forAll) {
-    if (forAll) { return true }
-    if (element && element.innerHTML.includes("REV-XXX")) { return true }    
-    return element && reverseBehaviourMap[element.innerHTML] ;
-}
-
-function setRedColor(element) {
-    element.setAttribute("style", "color:#DB543B;");
-}
-
-function setGreenColor(element) {
-    element.setAttribute("style", "color:#3BDB47;");
+function shouldReverseColors(title) {
+  if (!title) return false;
+  if (title.includes('REV-XXX')) return true;
+  return Boolean(reverseBehaviourMap[title]);
 }
