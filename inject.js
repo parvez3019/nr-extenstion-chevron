@@ -12,6 +12,16 @@ const RED = '#DB543B';
 const YELLOW = '#E6B800';
 const GREEN = '#3BDB47';
 
+
+const WIDGET_HEADER_SELECTOR = [
+  '[class*="CardBaseHeader"]',
+  '[class*="CardHeader"]',
+  '.WidgetHeader',
+  '[class*="WidgetHeader-title"]',
+  '[data-test-id*="widget.title"]',
+  '[data-test-id*="widget-title"]'
+].join(', ');
+
 setInterval(changeColor, 250);
 
 function changeColor() {
@@ -23,7 +33,6 @@ function changeColor() {
 function updateBillboardWidget(element) {
   const trend = getTrendDirection(element);
   const dropPercent = getTrendPercent(element);
-  // Group rows use their own label (e.g. service name); REV-XXX is often on the card header
   const reverse = shouldReverseColors(getElementLabel(element))
     || shouldReverseColors(getParentWidgetTitle(element));
 
@@ -59,11 +68,28 @@ function getElementLabel(element) {
 }
 
 function getParentWidgetTitle(element) {
-  const widget = element.closest('.Widget');
-  if (!widget) return '';
+  const roots = [];
+  const card = element.closest('.wnd-CardBase');
+  const nrWidget = element.closest('.nr1-shared-component-widget');
+  const legacy = element.closest('.Widget');
 
-  const header = widget.querySelector(':scope > .WidgetHeader .WidgetHeader-title');
-  return header ? header.textContent.trim() : '';
+  if (card) roots.push(card);
+  if (nrWidget && !roots.includes(nrWidget)) roots.push(nrWidget);
+  if (legacy && !roots.includes(legacy)) roots.push(legacy);
+
+  for (const widget of roots) {
+    const title = extractTitleFromWidget(widget);
+    if (title) return title;
+  }
+  return '';
+}
+
+function extractTitleFromWidget(widget) {
+  const header = widget.querySelector(WIDGET_HEADER_SELECTOR);
+  if (header && !header.closest('.-vz--viz-billboard-new-element')) {
+    return header.textContent.trim();
+  }
+  return '';
 }
 
 function getTrendDirection(element) {
@@ -87,6 +113,6 @@ function getTrendPercent(element) {
 
 function shouldReverseColors(title) {
   if (!title) return false;
-  if (title.includes('REV-XXX')) return true;
+  if (title.toUpperCase().includes('REV-XXX')) return true;
   return Boolean(reverseBehaviourMap[title]);
 }
