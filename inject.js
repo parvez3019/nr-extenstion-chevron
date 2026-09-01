@@ -8,9 +8,10 @@ const DECREASE_PATH_MARKER = 'L12 11.293';
 
 const DROP_WARNING_MAX_PERCENT = 15;
 
-const RED = '#DB543B';
-const YELLOW = '#E6B800';
-const GREEN = '#3BDB47';
+// Balanced for dark dashboards: visible against the UI, soft enough to avoid neon glare, dark enough for white text.
+const RED = '#C4564C';
+const YELLOW = '#C4A028';
+const GREEN = '#3B9A5C';
 
 
 const WIDGET_HEADER_SELECTOR = [
